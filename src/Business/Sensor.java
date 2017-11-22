@@ -1,32 +1,49 @@
 package Business;
 
 import Acq.ISensor;
+import Acq.SensorType;
 
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 public class Sensor implements ISensor {
-    private String unit;
     private double measurement;
     private Logger logger;
+    private SensorType sensorType;
 
-    public Sensor(String unit) {
-        this.unit = unit;
+    public Sensor(SensorType sensorType) {
+        this.sensorType = sensorType;
         this.logger = new Logger();
         this.measurement = Double.MIN_VALUE;
+        generateDummyData();
     }
 
     public Measurement getMeasurement() {
-        Measurement m = new Measurement(this.unit, this.measurement);
+        Measurement m = new Measurement(this.sensorType, this.measurement);
         logger.addLog(m);
         return m;
+    }
+
+    public Measurement getMeasurement(GregorianCalendar gc) {
+        Measurement m = new Measurement(this.sensorType, this.measurement);
+        logger.addLog(m, gc);
+        return m;
+    }
+
+    private void generateDummyData() {
+        System.out.println("generateDummyData metode bruges kun til test af sensor");
+        GregorianCalendar gc = new GregorianCalendar();
+        for (int i = 0; i < 25; i++) {
+            gc.add(GregorianCalendar.MINUTE, 1);
+            setMeasurement(Math.random()*100);
+            getMeasurement(gc);
+        }
     }
 
     public void setMeasurement(double measurement) {
         this.measurement = measurement;
     }
 
-    public Map<Date, Measurement> getLog() {
+    public Map<GregorianCalendar, Measurement> getLog() {
         return logger.getLog();
     }
 
@@ -34,14 +51,14 @@ public class Sensor implements ISensor {
         return measurement != Double.MIN_VALUE;
     }
 
-    public String getUnit() {
-        return unit;
+    public SensorType getSensorType() {
+        return sensorType;
     }
 
     @Override
     public String toString() {
         return "Sensor{" +
-                "unit='" + unit + '\'' +
+                "sensorType=" + sensorType +
                 '}';
     }
 }

@@ -1,9 +1,12 @@
 package Business;
 
 import Acq.IBuilding;
+import Acq.SensorType;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 public class Building implements IBuilding{
     private List<Sensor> sensors;
@@ -20,29 +23,39 @@ public class Building implements IBuilding{
 
     public void addMeasurements(String unit, double measurement) {
         for (Sensor sensor : sensors) {
-            if (sensor.getUnit().equals(unit) && !sensor.hasMeasurement()) {
+            if (sensor.getSensorType().toString().equalsIgnoreCase(unit) && !sensor.hasMeasurement()) {
                 sensor.setMeasurement(measurement);
             }
         }
     }
 
     public String getDataCollection() {
-        String s = "";
+        StringBuilder sb = new StringBuilder();
         for (Sensor sensor : sensors) {
-            s += sensor.getUnit();
-            s += sensor.getLog();
-            s += System.lineSeparator();
+            sb.append("--------------");
+            sb.append(sensor.getSensorType());
+            sb.append("\n");
+            for (Map.Entry<GregorianCalendar,Measurement> entry : sensor.getLog().entrySet()) {
+                sb.append(entry.getKey().get(GregorianCalendar.HOUR_OF_DAY));
+                System.out.println(entry.getKey().get(GregorianCalendar.MINUTE));
+                sb.append(":");
+                sb.append(entry.getKey().get(GregorianCalendar.MINUTE));
+                sb.append(" - ");
+                sb.append(entry.getValue()).append("\n");
+            }
+            sb.append("--------------");
+            sb.append(System.lineSeparator());
         }
-        return s;
+        return sb.toString();
     }
 
     public List<Sensor> getSensors() {
         return sensors;
     }
 
-    public void addSensor(String unit, int howMany) {
+    public void addSensor(SensorType type, int howMany) {
         for (int i = 0; i < howMany; i++) {
-            sensors.add(new Sensor(unit));
+                sensors.add(new Sensor(type));
         }
     }
 

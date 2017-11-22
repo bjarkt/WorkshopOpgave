@@ -3,6 +3,7 @@ package Business;
 import Acq.IBuilding;
 import Acq.IBusiness;
 import Acq.ISensor;
+import Acq.SensorType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +31,11 @@ public class BusinessFacade implements IBusiness {
         buildingManager.addMeasurement(buildingName, measurement, whichSensor);
     }
 
-    public void addSensor(String buildingName, String unit, int howMany) {
-        buildingManager.addSensor(buildingName, unit, howMany);
+    public void addSensor(String buildingName, SensorType type, int howMany) {
+        buildingManager.addSensor(buildingName, type, howMany);
     }
 
-    public void removeSensor(String buildingName, String unit) {
+    public void removeSensor(String buildingName, SensorType type) {
         // TODO
     }
 

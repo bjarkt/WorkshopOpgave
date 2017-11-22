@@ -1,16 +1,18 @@
 package Business;
 
+import Acq.SensorType;
+
 public class Measurement {
-    private String unit;
+    private SensorType sensorType;
     private double measurement;
 
-    public Measurement(String unit, double measurement) {
-        this.unit = unit;
+    public Measurement(SensorType sensorType, double measurement) {
+        this.sensorType = sensorType;
         this.measurement = measurement;
     }
 
-    public String getUnit() {
-        return unit;
+    public SensorType getSensorType() {
+        return sensorType;
     }
 
     public double getMeasurement() {
@@ -19,6 +21,6 @@ public class Measurement {
 
     @Override
     public String toString() {
-        return measurement + " " + unit;
+        return measurement + " " + sensorType;
     }
 }
