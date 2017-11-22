@@ -21,6 +21,15 @@ public enum SensorType {
         }
         return false;
     }
+    
+    public static SensorType stringToEnum(String value) {
+        for (SensorType type : SensorType.values()) {
+            if (type.toString().equals(value)) {
+                return type;
+            }
+        }
+        return null;
+    }
 
     @Override
     public String toString() {

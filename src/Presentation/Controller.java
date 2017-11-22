@@ -27,20 +27,24 @@ public class Controller implements IUI, Initializable {
     @FXML
     void handleAddBuildingButton(ActionEvent event) {
         List<String> buildingOptions = AlertBox.displayBuildingInputFields("Add building", "Add building");
-        business.addBuilding(buildingOptions.get(0), buildingOptions.get(1), buildingOptions.get(2));
-        statusLabel.setText("Building added.");
+        if (buildingOptions.size() == 3) {
+            business.addBuilding(buildingOptions.get(0), buildingOptions.get(1), buildingOptions.get(2));
+            statusLabel.setText("Building added.");
+        }
     }
 
     @FXML
-    void handleOverviewBuildingButton (ActionEvent e) {
+    void handleOverviewBuildingButton(ActionEvent e) {
         AlertBox.displayList("Building overview", "Building overview", business.getBuildings());
     }
 
     @FXML
     void handleAddSensorButton(ActionEvent event) {
         List<String> sensorOptions = AlertBox.displaySensorInputFields("Add sensor", "Add sensor", business.getBuildings());
-        business.addSensor(sensorOptions.get(0), SensorType.valueOf(sensorOptions.get(1)), Integer.parseInt(sensorOptions.get(2)));
-        statusLabel.setText("Sensor added.");
+        if (sensorOptions.size() == 3) {
+            business.addSensor(sensorOptions.get(0), SensorType.stringToEnum(sensorOptions.get(1)), Integer.parseInt(sensorOptions.get(2)));
+            statusLabel.setText("Sensor added.");
+        }
     }
 
     @FXML
