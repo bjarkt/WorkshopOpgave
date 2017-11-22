@@ -23,19 +23,20 @@ public class Sensor implements ISensor {
         return m;
     }
 
-    public Measurement getMeasurement(GregorianCalendar gc) {
+    public Measurement getMeasurement(Date date) {
         Measurement m = new Measurement(this.sensorType, this.measurement);
-        logger.addLog(m, gc);
+        logger.addLog(m, date);
         return m;
     }
 
     private void generateDummyData() {
         System.out.println("generateDummyData metode bruges kun til test af sensor");
-        GregorianCalendar gc = new GregorianCalendar();
+        Calendar now = Calendar.getInstance();
         for (int i = 0; i < 25; i++) {
-            gc.add(GregorianCalendar.MINUTE, 1);
+            now.add(Calendar.MINUTE, 1);
+            Date date = now.getTime();
             setMeasurement(Math.random()*100);
-            getMeasurement(gc);
+            getMeasurement(date);
         }
     }
 
@@ -43,7 +44,7 @@ public class Sensor implements ISensor {
         this.measurement = measurement;
     }
 
-    public Map<GregorianCalendar, Measurement> getLog() {
+    public Map<Date, Measurement> getLog() {
         return logger.getLog();
     }
 

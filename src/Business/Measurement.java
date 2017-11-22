@@ -2,13 +2,31 @@ package Business;
 
 import Acq.SensorType;
 
+import java.text.DecimalFormat;
+
 public class Measurement {
     private SensorType sensorType;
+    private String unit;
     private double measurement;
 
     public Measurement(SensorType sensorType, double measurement) {
         this.sensorType = sensorType;
         this.measurement = measurement;
+        determinesUnit();
+    }
+
+    private void determinesUnit() {
+        switch (this.sensorType) {
+            case TEMPERATURE:
+                this.unit = "°C";
+                break;
+            case CO2:
+                this.unit = "PPM^2";
+                break;
+            default:
+                this.unit = "no unit";
+                break;
+        }
     }
 
     public SensorType getSensorType() {
@@ -21,6 +39,7 @@ public class Measurement {
 
     @Override
     public String toString() {
-        return measurement + " " + sensorType;
+        DecimalFormat decimalFormat = new DecimalFormat("#.000");
+        return decimalFormat.format(measurement) + " " + unit;
     }
 }

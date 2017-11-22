@@ -3,10 +3,7 @@ package Business;
 import Acq.IBuilding;
 import Acq.SensorType;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Building implements IBuilding{
     private List<Sensor> sensors;
@@ -32,14 +29,14 @@ public class Building implements IBuilding{
     public String getDataCollection() {
         StringBuilder sb = new StringBuilder();
         for (Sensor sensor : sensors) {
+            sb.append(this.name);
+            sb.append(System.lineSeparator());
             sb.append("--------------");
+            sb.append(System.lineSeparator());
             sb.append(sensor.getSensorType());
-            sb.append("\n");
-            for (Map.Entry<GregorianCalendar,Measurement> entry : sensor.getLog().entrySet()) {
-                sb.append(entry.getKey().get(GregorianCalendar.HOUR_OF_DAY));
-                System.out.println(entry.getKey().get(GregorianCalendar.MINUTE));
-                sb.append(":");
-                sb.append(entry.getKey().get(GregorianCalendar.MINUTE));
+            sb.append(System.lineSeparator());
+            for (Map.Entry<Date,Measurement> entry : sensor.getLog().entrySet()) {
+                sb.append(entry.getKey());
                 sb.append(" - ");
                 sb.append(entry.getValue()).append("\n");
             }

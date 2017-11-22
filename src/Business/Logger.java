@@ -3,21 +3,21 @@ package Business;
 import java.util.*;
 
 public class Logger {
-    private Map<GregorianCalendar, Measurement> measurementList;
+    private Map<Date, Measurement> measurementList;
 
     public Logger() {
-        measurementList = new HashMap<>();
+        measurementList = new LinkedHashMap<>();
     }
 
-    public Map<GregorianCalendar, Measurement> getLog() {
+    public Map<Date, Measurement> getLog() {
         return measurementList;
     }
 
     public void addLog(Measurement measurement) {
-        addLog(measurement, new GregorianCalendar());
+        addLog(measurement, new Date());
     }
 
-    public void addLog(Measurement measurement, GregorianCalendar date) {
+    public void addLog(Measurement measurement, Date date) {
         measurementList.put(date, measurement);
     }
 }
