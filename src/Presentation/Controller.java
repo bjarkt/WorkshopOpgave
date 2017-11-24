@@ -40,7 +40,7 @@ public class Controller implements IUI, Initializable {
 
     @FXML
     void handleAddSensorButton(ActionEvent event) {
-        List<String> sensorOptions = AlertBox.displaySensorInputFields("Add sensor", "Add sensor", business.getBuildings());
+        List<String> sensorOptions = AlertBox.displaySensorInputFieldsRemove("Add sensor", "Add sensor", business.getBuildings(),business);
         if (sensorOptions.size() == 3) {
             business.addSensor(sensorOptions.get(0), SensorType.stringToEnum(sensorOptions.get(1)), Integer.parseInt(sensorOptions.get(2)));
             statusLabel.setText("Sensor added.");
@@ -55,6 +55,8 @@ public class Controller implements IUI, Initializable {
     @FXML
     void handleRemoveBuildingButton(ActionEvent event) {
         statusLabel.setText("Not implemented");
+        List<String> sensorInputs = AlertBox.displaySensorInputFieldsRemove("Remove sensor", "Remove sensor", business.getBuildings(), business);
+
     }
 
     @FXML

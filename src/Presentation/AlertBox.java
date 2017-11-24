@@ -4,6 +4,7 @@ package Presentation;
 import Acq.IBuilding;
 import Acq.ISensor;
 import Acq.SensorType;
+import Acq.IBusiness;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -134,5 +135,46 @@ public class AlertBox {
         window.showAndWait();
     }
 
+       public static List<String> displaySensorInputFieldsRemove(String header, String text, List<IBuilding> buildingList,  IBusiness ibusiness) {
+        Stage window = createWindow(header);
+
+        Label label = new Label();
+        label.setText(text);
+        label.setWrapText(true);
+
+        Button closeButton = new Button("Remove");
+        closeButton.setOnAction(e -> window.close());
+
+
+        Label buildingLabel = new Label("Choose which building to remove sensor from");
+        ObservableList<IBuilding> buildingOptions = FXCollections.observableArrayList(buildingList);
+        ComboBox<IBuilding> buildingComboBox = new ComboBox<>(buildingOptions);
+        buildingComboBox.setValue(buildingOptions.get(0));
+
+        Label sensorTypeLabel = new Label("Choose type of sensor");
+        ObservableList<SensorType> sensorTypeOptions = FXCollections.observableArrayList(Arrays.asList(SensorType.values()));
+        ComboBox<SensorType> sensorTypeComboBox = new ComboBox(sensorTypeOptions);
+        sensorTypeComboBox.setValue(sensorTypeOptions.get(0));
+
+        
+
+        Label sensorID = new Label("Choose which sensor to remove");
+        ObservableList<ISensor> sensorAmountOptions = FXCollections.observableArrayList(ibusiness.getSensorsForBuilding(buildingOptions.get(0).getName()));
+        ComboBox<ISensor> sensorAmountComboBox = new ComboBox(sensorAmountOptions);
+        sensorAmountComboBox.setValue(sensorAmountOptions.get(0)); 
+
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, buildingLabel, buildingComboBox, sensorTypeLabel, sensorTypeComboBox, sensorID, sensorAmountComboBox, closeButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(layout);
+        window.setScene(scene);
+        window.showAndWait();
+
+        ArrayList<String> l = new ArrayList<>();
+        Collections.addAll(l, buildingComboBox.getValue().getName(), sensorTypeComboBox.getValue().toString(), sensorAmountComboBox.getValue().toString());
+        return l; 
+    } 
+    
 
 }

@@ -19,5 +19,5 @@ public class Logger {
 
     public void addLog(Measurement measurement, Date date) {
         measurementList.put(date, measurement);
-    }
+    }    
 }

@@ -3,6 +3,7 @@ package Business;
 import Acq.SensorType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BuildingManager {
@@ -38,6 +39,12 @@ public class BuildingManager {
                 building.addSensor(type, howMany);
             }
         }
+    }
+    public void removeSensor(String buildingName, SensorType type, int ID) {
+        for(Building building : buildings)
+           if(building.getName().equals(buildingName)) {
+               building.removeSensor(type,ID);
+           }
     }
 
     public List<Building> getBuildings() {
