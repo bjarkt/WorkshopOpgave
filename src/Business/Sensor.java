@@ -9,7 +9,7 @@ public class Sensor implements ISensor {
     private double measurement;
     private Logger logger;
     private SensorType sensorType;
-
+    
     public Sensor(SensorType sensorType) {
         this.sensorType = sensorType;
         this.logger = new Logger();

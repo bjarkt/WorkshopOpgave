@@ -1,4 +1,5 @@
 /build/
+/nbproject/private/
 .idea
 out
 .gitignore

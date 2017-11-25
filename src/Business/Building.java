@@ -5,7 +5,8 @@ import Acq.SensorType;
 
 import java.util.*;
 
-public class Building implements IBuilding{
+public class Building implements IBuilding {
+
     private List<Sensor> sensors;
     private String name;
     private String address;
@@ -35,7 +36,7 @@ public class Building implements IBuilding{
             sb.append(System.lineSeparator());
             sb.append(sensor.getSensorType());
             sb.append(System.lineSeparator());
-            for (Map.Entry<Date,Measurement> entry : sensor.getLog().entrySet()) {
+            for (Map.Entry<Date, Measurement> entry : sensor.getLog().entrySet()) {
                 sb.append(entry.getKey());
                 sb.append(" - ");
                 sb.append(entry.getValue()).append("\n");
@@ -52,8 +53,20 @@ public class Building implements IBuilding{
 
     public void addSensor(SensorType type, int howMany) {
         for (int i = 0; i < howMany; i++) {
-                sensors.add(new Sensor(type));
+            sensors.add(new Sensor(type));
         }
+    }
+
+    public void removeSensor(SensorType type, int ID) {
+
+        for (int i = 0; i < sensors.size(); i++) {
+            
+            if (i == ID && sensors.get(i).getSensorType().equals(type)) {
+                sensors.remove(sensors.get(i));
+            }
+
+        }
+
     }
 
     public String getName() {

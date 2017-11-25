@@ -6,6 +6,7 @@ import Acq.ISensor;
 import Acq.SensorType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BusinessFacade implements IBusiness {
@@ -35,8 +36,8 @@ public class BusinessFacade implements IBusiness {
         buildingManager.addSensor(buildingName, type, howMany);
     }
 
-    public void removeSensor(String buildingName, SensorType type) {
-        // TODO
+    public void removeSensor(String buildingName, SensorType type, int ID) {
+        buildingManager.removeSensor(buildingName, type, ID);
     }
 
     public List<ISensor> getSensorsForBuilding(String buildingName) {
