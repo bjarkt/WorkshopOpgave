@@ -18,7 +18,7 @@ public class BuildingManager {
     }
 
     public void removeBuilding(String name) {
-        for (int i = buildings.size()-1; i > 0; i--) {
+        for (int i = buildings.size() - 1; i > 0; i--) {
             if (buildings.get(i).getName().equals(name)) {
                 buildings.remove(i);
             }
@@ -33,18 +33,19 @@ public class BuildingManager {
         }
     }
 
-    public void addSensor(String buildingName, SensorType type, int howMany) {
+    public void addSensor(String buildingName, SensorType type, int howMany, String name) {
         for (Building building : buildings) {
             if (building.getName().equals(buildingName)) {
-                building.addSensor(type, howMany);
+                building.addSensor(type, howMany, name);
             }
         }
     }
+
     public void removeSensor(String buildingName, SensorType type, int ID) {
-        for(Building building : buildings)
-           if(building.getName().equals(buildingName)) {
-               building.removeSensor(type,ID);
-           }
+        for (Building building : buildings)
+            if (building.getName().equals(buildingName)) {
+                building.removeSensor(type, ID);
+            }
     }
 
     public List<Building> getBuildings() {

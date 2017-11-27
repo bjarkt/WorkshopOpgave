@@ -32,8 +32,8 @@ public class BusinessFacade implements IBusiness {
         buildingManager.addMeasurement(buildingName, measurement, whichSensor);
     }
 
-    public void addSensor(String buildingName, SensorType type, int howMany) {
-        buildingManager.addSensor(buildingName, type, howMany);
+    public void addSensor(String buildingName, SensorType type, int howMany, String name) {
+        buildingManager.addSensor(buildingName, type, howMany, name);
     }
 
     public void removeSensor(String buildingName, SensorType type, int ID) {
@@ -56,9 +56,6 @@ public class BusinessFacade implements IBusiness {
         }
         return l;
     }
-
-
-
 
 
 }

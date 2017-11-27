@@ -16,11 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.xml.soap.Text;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AlertBox {
 
@@ -32,7 +28,7 @@ public class AlertBox {
         return window;
     }
 
-    public static List<String> displayBuildingInputFields(String header, String text) {
+    public static HashMap<String, String> displayBuildingInputFields(String header, String text) {
         Stage window = createWindow(header);
 
         Label label = new Label();
@@ -46,25 +42,27 @@ public class AlertBox {
         TextField nameField = new TextField();
 
         Label addressLabel = new Label("Enter address of building");
-        TextField AddressField = new TextField();
+        TextField addressField = new TextField();
 
         Label cityLabel = new Label("Enter city of building");
         TextField cityField = new TextField();
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, nameLabel, nameField, addressLabel, AddressField, cityLabel, cityField, closeButton);
+        layout.getChildren().addAll(label, nameLabel, nameField, addressLabel, addressField, cityLabel, cityField, closeButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
 
-        ArrayList<String> l = new ArrayList<>();
-        Collections.addAll(l, nameField.getText(), AddressField.getText(), cityField.getText());
-        return l;
+        HashMap<String, String> settings = new HashMap<>();
+        settings.put("name", nameField.getText());
+        settings.put("address", addressField.getText());
+        settings.put("city", cityField.getText());
+        return settings;
     }
 
-    public static List<String> displaySensorInputFields(String header, String text, List<IBuilding> buildingList) {
+    public static HashMap<String, String> displaySensorInputFields(String header, String text, List<IBuilding> buildingList) {
         Stage window = createWindow(header);
 
         Label label = new Label();
@@ -85,6 +83,8 @@ public class AlertBox {
         ComboBox<SensorType> sensorTypeComboBox = new ComboBox(sensorTypeOptions);
         sensorTypeComboBox.setValue(sensorTypeOptions.get(0));
 
+        Label sensorNameLabel = new Label("Enter name of sensor");
+        TextField sensorNameField = new TextField();
 
         Label sensorAmountLabel = new Label("Choose amount of sensors of this type to add");
         ObservableList<Integer> sensorAmountOptions = FXCollections.observableArrayList(1, 2, 3, 4, 5);
@@ -92,16 +92,19 @@ public class AlertBox {
         sensorAmountComboBox.setValue(sensorAmountOptions.get(0));
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, buildingLabel, buildingComboBox, sensorTypeLabel, sensorTypeComboBox, sensorAmountLabel, sensorAmountComboBox, closeButton);
+        layout.getChildren().addAll(label, buildingLabel, buildingComboBox, sensorTypeLabel, sensorTypeComboBox, sensorNameLabel, sensorNameField, sensorAmountLabel, sensorAmountComboBox, closeButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
 
-        ArrayList<String> l = new ArrayList<>();
-        Collections.addAll(l, buildingComboBox.getValue().getName(), sensorTypeComboBox.getValue().toString(), sensorAmountComboBox.getValue().toString());
-        return l;
+        HashMap<String, String> settings = new HashMap<>();
+        settings.put("BuildingName", buildingComboBox.getValue().getName());
+        settings.put("type", sensorTypeComboBox.getValue().toString());
+        settings.put("amount", sensorAmountComboBox.getValue().toString());
+        settings.put("sensorName", sensorNameField.getText());
+        return settings;
     }
 
     public static <T> void displayList(String header, String text, List<T> list) {
@@ -135,7 +138,7 @@ public class AlertBox {
         window.showAndWait();
     }
 
-       public static List<String> displaySensorInputFieldsRemove(String header, String text, List<IBuilding> buildingList,  IBusiness ibusiness) {
+    public static HashMap<String, String> displaySensorInputFieldsRemove(String header, String text, List<IBuilding> buildingList, IBusiness ibusiness) {
         Stage window = createWindow(header);
 
         Label label = new Label();
@@ -147,34 +150,63 @@ public class AlertBox {
 
 
         Label buildingLabel = new Label("Choose which building to remove sensor from");
-        ObservableList<IBuilding> buildingOptions = FXCollections.observableArrayList(buildingList);
+        ObservableList<IBuilding> buildingOptions = FXCollections.observableArrayList();
+        for (IBuilding building : buildingList) {
+            if (ibusiness.getSensorsForBuilding(building.getName()).size() != 0) {
+                buildingOptions.add(building);
+            }
+        }
+        if (buildingOptions.size() == 0) {
+            return null;
+        }
         ComboBox<IBuilding> buildingComboBox = new ComboBox<>(buildingOptions);
         buildingComboBox.setValue(buildingOptions.get(0));
 
+
+        Set<SensorType> possibleSensorTypes = new HashSet<>();
+        setPossibleSensorTypes(ibusiness, possibleSensorTypes, buildingComboBox.getValue());
+        ObservableList<SensorType> sensorTypeOptions = FXCollections.observableArrayList(possibleSensorTypes);
+
         Label sensorTypeLabel = new Label("Choose type of sensor");
-        ObservableList<SensorType> sensorTypeOptions = FXCollections.observableArrayList(Arrays.asList(SensorType.values()));
         ComboBox<SensorType> sensorTypeComboBox = new ComboBox(sensorTypeOptions);
         sensorTypeComboBox.setValue(sensorTypeOptions.get(0));
 
-        
+        buildingComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            setPossibleSensorTypes(ibusiness, possibleSensorTypes, newValue);
+            sensorTypeOptions.clear();
+            sensorTypeOptions.addAll(possibleSensorTypes);
+            sensorTypeComboBox.setValue(sensorTypeOptions.get(0));
+        });
+
 
         Label sensorID = new Label("Choose which sensor to remove");
-        ObservableList<ISensor> sensorAmountOptions = FXCollections.observableArrayList(ibusiness.getSensorsForBuilding(buildingOptions.get(0).getName()));
-        ComboBox<ISensor> sensorAmountComboBox = new ComboBox(sensorAmountOptions);
-        sensorAmountComboBox.setValue(sensorAmountOptions.get(0)); 
+        ObservableList<ISensor> sensorIDOptions = FXCollections.observableArrayList(ibusiness.getSensorsForBuilding(buildingComboBox.getValue().getName()));
+        ComboBox<ISensor> sensorIDComboBox = new ComboBox(sensorIDOptions);
+        sensorIDComboBox.setValue(sensorIDOptions.get(0));
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, buildingLabel, buildingComboBox, sensorTypeLabel, sensorTypeComboBox, sensorID, sensorAmountComboBox, closeButton);
+        layout.getChildren().addAll(label, buildingLabel, buildingComboBox, sensorTypeLabel, sensorTypeComboBox, sensorID, sensorIDComboBox, closeButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
 
-        ArrayList<String> l = new ArrayList<>();
-        Collections.addAll(l, buildingComboBox.getValue().getName(), sensorTypeComboBox.getValue().toString(), sensorAmountComboBox.getValue().toString());
-        return l; 
-    } 
-    
+        HashMap<String, String> settings = new HashMap<>();
+        settings.put("BuildingName", buildingComboBox.getValue().getName());
+        settings.put("type", sensorTypeComboBox.getValue().toString());
+        settings.put("id", String.valueOf(sensorIDOptions.indexOf(sensorIDComboBox.getValue())));
+        return settings;
+    }
+
+    private static void setPossibleSensorTypes(IBusiness ibusiness, Set<SensorType> possibleSensorTypes, IBuilding newValue) {
+        List<ISensor> possibleSensors = new ArrayList<>();
+        possibleSensorTypes.clear();
+        possibleSensors.addAll(ibusiness.getSensorsForBuilding(newValue.getName()));
+        for (ISensor possibleSensor : possibleSensors) {
+            possibleSensorTypes.add(possibleSensor.getSensorType());
+        }
+    }
+
 
 }

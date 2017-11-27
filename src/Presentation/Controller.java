@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -26,9 +27,9 @@ public class Controller implements IUI, Initializable {
 
     @FXML
     void handleAddBuildingButton(ActionEvent event) {
-        List<String> buildingOptions = AlertBox.displayBuildingInputFields("Add building", "Add building");
+        HashMap<String, String> buildingOptions = AlertBox.displayBuildingInputFields("Add building", "Add building");
         if (buildingOptions.size() == 3) {
-            business.addBuilding(buildingOptions.get(0), buildingOptions.get(1), buildingOptions.get(2));
+            business.addBuilding(buildingOptions.get("name"), buildingOptions.get("address"), buildingOptions.get("city"));
             statusLabel.setText("Building added.");
         }
     }
@@ -40,9 +41,10 @@ public class Controller implements IUI, Initializable {
 
     @FXML
     void handleAddSensorButton(ActionEvent event) {
-        List<String> sensorOptions = AlertBox.displaySensorInputFieldsRemove("Add sensor", "Add sensor", business.getBuildings(),business);
-        if (sensorOptions.size() == 3) {
-            business.addSensor(sensorOptions.get(0), SensorType.stringToEnum(sensorOptions.get(1)), Integer.parseInt(sensorOptions.get(2)));
+        HashMap<String, String> sensorOptions = AlertBox.displaySensorInputFields("Add sensor", "Add sensor", business.getBuildings());
+        if (sensorOptions.size() == 4) {
+            System.out.println(sensorOptions);
+            business.addSensor(sensorOptions.get("BuildingName"), SensorType.stringToEnum(sensorOptions.get("type")), Integer.parseInt(sensorOptions.get("amount")), sensorOptions.get("sensorName"));
             statusLabel.setText("Sensor added.");
         }
     }
@@ -55,13 +57,15 @@ public class Controller implements IUI, Initializable {
     @FXML
     void handleRemoveBuildingButton(ActionEvent event) {
         statusLabel.setText("Not implemented");
-        List<String> sensorInputs = AlertBox.displaySensorInputFieldsRemove("Remove sensor", "Remove sensor", business.getBuildings(), business);
-
     }
 
     @FXML
     void handleRemoveSensorButton(ActionEvent event) {
-        statusLabel.setText("Not implemented");
+        HashMap<String, String> sensorInputs = AlertBox.displaySensorInputFieldsRemove("Remove sensor", "Remove sensor", business.getBuildings(), business);
+        if (sensorInputs != null && sensorInputs.size() == 3) {
+            business.removeSensor(sensorInputs.get("BuildingName"), SensorType.stringToEnum(sensorInputs.get("type")), Integer.valueOf(sensorInputs.get("id")));
+            statusLabel.setText("Removed sensor.");
+        }
     }
 
     @Override
@@ -73,7 +77,7 @@ public class Controller implements IUI, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         business.addBuilding("SDU", "Campusvej 55", "Odense");
         business.addBuilding("Det Hvide Hus", "1600 Pennsylvania Avenue", "Washington D.C.");
-        business.addSensor("SDU", SensorType.TEMPERATURE, 1);
-        business.addSensor("Det Hvide Hus", SensorType.CO2, 1);
+        business.addSensor("SDU", SensorType.TEMPERATURE, 1, "bla bla");
+        business.addSensor("Det Hvide Hus", SensorType.CO2, 1, "bla ");
     }
 }

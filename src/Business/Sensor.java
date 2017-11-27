@@ -9,11 +9,13 @@ public class Sensor implements ISensor {
     private double measurement;
     private Logger logger;
     private SensorType sensorType;
-    
-    public Sensor(SensorType sensorType) {
+    private String name;
+
+    public Sensor(SensorType sensorType, String name) {
         this.sensorType = sensorType;
         this.logger = new Logger();
         this.measurement = Double.MIN_VALUE;
+        this.name = name;
         generateDummyData();
     }
 
@@ -35,7 +37,7 @@ public class Sensor implements ISensor {
         for (int i = 0; i < 25; i++) {
             now.add(Calendar.MINUTE, 1);
             Date date = now.getTime();
-            setMeasurement(Math.random()*100);
+            setMeasurement(Math.random() * 100);
             getMeasurement(date);
         }
     }
@@ -58,8 +60,6 @@ public class Sensor implements ISensor {
 
     @Override
     public String toString() {
-        return "Sensor{" +
-                "sensorType=" + sensorType +
-                '}';
+        return sensorType + " - " + name;
     }
 }

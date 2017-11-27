@@ -30,7 +30,7 @@ public class Building implements IBuilding {
     public String getDataCollection() {
         StringBuilder sb = new StringBuilder();
         for (Sensor sensor : sensors) {
-            sb.append(this.name);
+            sb.append(sensor);
             sb.append(System.lineSeparator());
             sb.append("--------------");
             sb.append(System.lineSeparator());
@@ -51,22 +51,18 @@ public class Building implements IBuilding {
         return sensors;
     }
 
-    public void addSensor(SensorType type, int howMany) {
+    public void addSensor(SensorType type, int howMany, String name) {
         for (int i = 0; i < howMany; i++) {
-            sensors.add(new Sensor(type));
+            sensors.add(new Sensor(type, name));
         }
     }
 
     public void removeSensor(SensorType type, int ID) {
-
         for (int i = 0; i < sensors.size(); i++) {
-            
             if (i == ID && sensors.get(i).getSensorType().equals(type)) {
                 sensors.remove(sensors.get(i));
             }
-
         }
-
     }
 
     public String getName() {
