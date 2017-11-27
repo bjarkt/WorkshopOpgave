@@ -1,5 +1,6 @@
 package Business;
 
+import Acq.IData;
 import Acq.SensorType;
 
 import java.util.ArrayList;
@@ -33,10 +34,10 @@ public class BuildingManager {
         }
     }
 
-    public void addSensor(String buildingName, SensorType type, int howMany, String name) {
+    public void addSensor(String buildingName, SensorType type, int howMany, String name, IData data) {
         for (Building building : buildings) {
             if (building.getName().equals(buildingName)) {
-                building.addSensor(type, howMany, name);
+                building.addSensor(type, howMany, name, data);
             }
         }
     }

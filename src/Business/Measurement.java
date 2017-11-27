@@ -1,10 +1,12 @@
 package Business;
 
+import Acq.IMeasurement;
 import Acq.SensorType;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
-public class Measurement {
+public class Measurement implements IMeasurement {
     private SensorType sensorType;
     private String unit;
     private double measurement;

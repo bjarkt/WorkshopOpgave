@@ -1,6 +1,8 @@
 package Business;
 
 import Acq.IBuilding;
+import Acq.IData;
+import Acq.IMeasurement;
 import Acq.SensorType;
 
 import java.util.*;
@@ -36,7 +38,7 @@ public class Building implements IBuilding {
             sb.append(System.lineSeparator());
             sb.append(sensor.getSensorType());
             sb.append(System.lineSeparator());
-            for (Map.Entry<Date, Measurement> entry : sensor.getLog().entrySet()) {
+            for (Map.Entry<Date, IMeasurement> entry : sensor.getLog().entrySet()) {
                 sb.append(entry.getKey());
                 sb.append(" - ");
                 sb.append(entry.getValue()).append("\n");
@@ -51,9 +53,9 @@ public class Building implements IBuilding {
         return sensors;
     }
 
-    public void addSensor(SensorType type, int howMany, String name) {
+    public void addSensor(SensorType type, int howMany, String name, IData data) {
         for (int i = 0; i < howMany; i++) {
-            sensors.add(new Sensor(type, name));
+            sensors.add(new Sensor(type, name, data));
         }
     }
 

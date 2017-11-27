@@ -6,6 +6,7 @@ import Acq.ISensor;
 import Acq.SensorType;
 import Acq.IBusiness;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -107,7 +108,36 @@ public class AlertBox {
         return settings;
     }
 
-    public static <T> void displayList(String header, String text, List<T> list) {
+    public static void displaySensorList(String header, String text, List<ISensor> list, Controller controller) {
+        Stage window = createWindow(header);
+
+        ListView<Object> lv = new ListView<>();
+        lv.getItems().addAll(list);
+        lv.setOnMouseClicked(event -> {
+            controller.createChart((ISensor)lv.getSelectionModel().getSelectedItem());
+        });
+
+        Label label = new Label();
+        label.setText(text);
+        label.setWrapText(true);
+
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(e -> window.close());
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPadding(new Insets(10, 10, 10, 10));
+        borderPane.setTop(label);
+        borderPane.setCenter(lv);
+        borderPane.setBottom(closeButton);
+        BorderPane.setAlignment(label, Pos.CENTER);
+        BorderPane.setAlignment(closeButton, Pos.CENTER);
+        Scene scene = new Scene(borderPane);
+
+        window.setScene(scene);
+        window.showAndWait();
+    }
+
+    public static void displayBuildingList(String header, String text, List<IBuilding> list) {
         Stage window = createWindow(header);
 
         ListView<Object> lv = new ListView<>();
@@ -129,11 +159,6 @@ public class AlertBox {
         BorderPane.setAlignment(closeButton, Pos.CENTER);
         Scene scene = new Scene(borderPane);
 
-        //VBox layout = new VBox(10);
-        //layout.getChildren().addAll(label, lv, closeButton);
-        //layout.setAlignment(Pos.CENTER);
-
-        //Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
     }

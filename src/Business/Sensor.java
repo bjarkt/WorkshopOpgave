@@ -1,5 +1,7 @@
 package Business;
 
+import Acq.IData;
+import Acq.IMeasurement;
 import Acq.ISensor;
 import Acq.SensorType;
 
@@ -11,9 +13,9 @@ public class Sensor implements ISensor {
     private SensorType sensorType;
     private String name;
 
-    public Sensor(SensorType sensorType, String name) {
+    public Sensor(SensorType sensorType, String name, IData data) {
         this.sensorType = sensorType;
-        this.logger = new Logger();
+        this.logger = new Logger(data);
         this.measurement = Double.MIN_VALUE;
         this.name = name;
         generateDummyData();
@@ -46,8 +48,13 @@ public class Sensor implements ISensor {
         this.measurement = measurement;
     }
 
-    public Map<Date, Measurement> getLog() {
-        return logger.getLog();
+    public LinkedHashMap<Date, IMeasurement> getLog() {
+        return new LinkedHashMap<>(logger.getLog());
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public boolean hasMeasurement() {
@@ -60,6 +67,6 @@ public class Sensor implements ISensor {
 
     @Override
     public String toString() {
-        return sensorType + " - " + name;
+        return name + " - " + sensorType;
     }
 }

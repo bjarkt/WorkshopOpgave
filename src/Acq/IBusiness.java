@@ -11,6 +11,9 @@ public interface IBusiness {
     void removeBuilding(String name);
 
     List<String> getLogs();
+    List<ISensor> getSensorsLists();
+
+    void injectData(IData data);
 
     List<IBuilding> getBuildings();
 }

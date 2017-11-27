@@ -1,9 +1,6 @@
 package Business;
 
-import Acq.IBuilding;
-import Acq.IBusiness;
-import Acq.ISensor;
-import Acq.SensorType;
+import Acq.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +8,7 @@ import java.util.List;
 
 public class BusinessFacade implements IBusiness {
     private BuildingManager buildingManager;
+    private IData dataFacade;
 
     public BusinessFacade() {
         buildingManager = new BuildingManager();
@@ -33,7 +31,7 @@ public class BusinessFacade implements IBusiness {
     }
 
     public void addSensor(String buildingName, SensorType type, int howMany, String name) {
-        buildingManager.addSensor(buildingName, type, howMany, name);
+        buildingManager.addSensor(buildingName, type, howMany, name, dataFacade);
     }
 
     public void removeSensor(String buildingName, SensorType type, int ID) {
@@ -55,6 +53,18 @@ public class BusinessFacade implements IBusiness {
             l.add(building.getDataCollection());
         }
         return l;
+    }
+
+    public List<ISensor> getSensorsLists() {
+        List<ISensor> lists = new ArrayList<>();
+        for (Building building : buildingManager.getBuildings()) {
+            lists.addAll(getSensorsForBuilding(building.getName()));
+        }
+        return lists;
+    }
+
+    public void injectData(IData data) {
+        this.dataFacade = data;
     }
 
 
