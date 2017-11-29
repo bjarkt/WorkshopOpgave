@@ -4,3 +4,4 @@
 out
 .gitignore
 *.iml
+log.xml

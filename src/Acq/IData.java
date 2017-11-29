@@ -1,8 +1,9 @@
 package Acq;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public interface IData {
     void save(HashMap<String, String> mapToSave);
-    HashMap<String, String> load();
+    Map<String, String> load();
 }
