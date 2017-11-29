@@ -19,7 +19,7 @@ public class BusinessFacade implements IBusiness {
     }
 
     public void removeBuilding(String name) {
-        // TODO
+        buildingManager.removeBuilding(name);
     }
 
     public List<IBuilding> getBuildings() {

@@ -37,7 +37,6 @@ public class AlertBox {
         label.setWrapText(true);
 
         Button closeButton = new Button("Add");
-        closeButton.setOnAction(e -> window.close());
 
         Label nameLabel = new Label("Enter name of building");
         TextField nameField = new TextField();
@@ -52,14 +51,19 @@ public class AlertBox {
         layout.getChildren().addAll(label, nameLabel, nameField, addressLabel, addressField, cityLabel, cityField, closeButton);
         layout.setAlignment(Pos.CENTER);
 
+        HashMap<String, String> settings = new HashMap<>();
+        closeButton.setOnAction(e -> {
+            settings.put("name", nameField.getText());
+            settings.put("address", addressField.getText());
+            settings.put("city", cityField.getText());
+            window.close();
+        });
+
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
 
-        HashMap<String, String> settings = new HashMap<>();
-        settings.put("name", nameField.getText());
-        settings.put("address", addressField.getText());
-        settings.put("city", cityField.getText());
+
         return settings;
     }
 
@@ -71,7 +75,6 @@ public class AlertBox {
         label.setWrapText(true);
 
         Button closeButton = new Button("Add");
-        closeButton.setOnAction(e -> window.close());
 
 
         Label buildingLabel = new Label("Choose which building to add to");
@@ -96,15 +99,20 @@ public class AlertBox {
         layout.getChildren().addAll(label, buildingLabel, buildingComboBox, sensorTypeLabel, sensorTypeComboBox, sensorNameLabel, sensorNameField, sensorAmountLabel, sensorAmountComboBox, closeButton);
         layout.setAlignment(Pos.CENTER);
 
+        HashMap<String, String> settings = new HashMap<>();
+        closeButton.setOnAction(e -> {
+            settings.put("BuildingName", buildingComboBox.getValue().getName());
+            settings.put("type", sensorTypeComboBox.getValue().toString());
+            settings.put("amount", sensorAmountComboBox.getValue().toString());
+            settings.put("sensorName", sensorNameField.getText());
+            window.close();
+        });
+
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
 
-        HashMap<String, String> settings = new HashMap<>();
-        settings.put("BuildingName", buildingComboBox.getValue().getName());
-        settings.put("type", sensorTypeComboBox.getValue().toString());
-        settings.put("amount", sensorAmountComboBox.getValue().toString());
-        settings.put("sensorName", sensorNameField.getText());
+
         return settings;
     }
 
@@ -163,6 +171,44 @@ public class AlertBox {
         window.showAndWait();
     }
 
+    public static HashMap<String, String> displayBuildingInputFieldsRemove(String header, String text, List<IBuilding> buildingList) {
+        Stage window = createWindow(header);
+
+        Label label = new Label();
+        label.setText(text);
+        label.setWrapText(true);
+
+        Button closeButton = new Button("Remove");
+
+
+        Label buildingLabel = new Label("Choose which building to remove");
+        ObservableList<IBuilding> buildingOptions = FXCollections.observableArrayList();
+        buildingOptions.addAll(buildingList);
+        if (buildingOptions.size() == 0) {
+            return null;
+        }
+        ComboBox<IBuilding> buildingComboBox = new ComboBox<>(buildingOptions);
+        buildingComboBox.setValue(buildingOptions.get(0));
+
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, buildingLabel, buildingComboBox, closeButton);
+        layout.setAlignment(Pos.CENTER);
+
+        HashMap<String, String> settings = new HashMap<>();
+
+        closeButton.setOnAction(e -> {
+            settings.put("BuildingName", buildingComboBox.getValue().getName());
+            window.close();
+        });
+
+        Scene scene = new Scene(layout);
+        window.setScene(scene);
+        window.showAndWait();
+
+
+        return settings;
+    }
+
     public static HashMap<String, String> displaySensorInputFieldsRemove(String header, String text, List<IBuilding> buildingList, IBusiness ibusiness) {
         Stage window = createWindow(header);
 
@@ -171,7 +217,6 @@ public class AlertBox {
         label.setWrapText(true);
 
         Button closeButton = new Button("Remove");
-        closeButton.setOnAction(e -> window.close());
 
 
         Label buildingLabel = new Label("Choose which building to remove sensor from");
@@ -196,12 +241,6 @@ public class AlertBox {
         ComboBox<SensorType> sensorTypeComboBox = new ComboBox(sensorTypeOptions);
         sensorTypeComboBox.setValue(sensorTypeOptions.get(0));
 
-        buildingComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            setPossibleSensorTypes(ibusiness, possibleSensorTypes, newValue);
-            sensorTypeOptions.clear();
-            sensorTypeOptions.addAll(possibleSensorTypes);
-            sensorTypeComboBox.setValue(sensorTypeOptions.get(0));
-        });
 
 
         Label sensorID = new Label("Choose which sensor to remove");
@@ -209,18 +248,36 @@ public class AlertBox {
         ComboBox<ISensor> sensorIDComboBox = new ComboBox(sensorIDOptions);
         sensorIDComboBox.setValue(sensorIDOptions.get(0));
 
+
+        buildingComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            setPossibleSensorTypes(ibusiness, possibleSensorTypes, newValue);
+            sensorTypeOptions.clear();
+            sensorTypeOptions.addAll(possibleSensorTypes);
+            sensorTypeComboBox.setValue(sensorTypeOptions.get(0));
+
+            sensorIDOptions.clear();
+            sensorIDOptions.addAll(ibusiness.getSensorsForBuilding(buildingComboBox.getValue().getName()));
+            sensorIDComboBox.setValue(sensorIDOptions.get(0));
+        });
+
         VBox layout = new VBox(10);
         layout.getChildren().addAll(label, buildingLabel, buildingComboBox, sensorTypeLabel, sensorTypeComboBox, sensorID, sensorIDComboBox, closeButton);
         layout.setAlignment(Pos.CENTER);
+
+        HashMap<String, String> settings = new HashMap<>();
+
+        closeButton.setOnAction(e -> {
+            settings.put("BuildingName", buildingComboBox.getValue().getName());
+            settings.put("type", sensorTypeComboBox.getValue().toString());
+            settings.put("id", String.valueOf(sensorIDOptions.indexOf(sensorIDComboBox.getValue())));
+            window.close();
+        });
 
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
 
-        HashMap<String, String> settings = new HashMap<>();
-        settings.put("BuildingName", buildingComboBox.getValue().getName());
-        settings.put("type", sensorTypeComboBox.getValue().toString());
-        settings.put("id", String.valueOf(sensorIDOptions.indexOf(sensorIDComboBox.getValue())));
+
         return settings;
     }
 

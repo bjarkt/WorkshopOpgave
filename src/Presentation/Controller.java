@@ -58,7 +58,11 @@ public class Controller implements IUI, Initializable {
 
     @FXML
     void handleRemoveBuildingButton(ActionEvent event) {
-        statusLabel.setText("Not implemented");
+        HashMap<String, String> options = AlertBox.displayBuildingInputFieldsRemove("Remove building", "Remove building", business.getBuildings());
+        if (options != null && options.size() == 1) {
+            business.removeBuilding(options.get("BuildingName"));
+            statusLabel.setText("Building called " + options.get("BuildingName") + " removed.");
+        }
     }
 
     @FXML
